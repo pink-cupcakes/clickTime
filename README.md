@@ -28,9 +28,9 @@ Instructions:
 
 1. Clone this repo:
 
-   https://github.com/pinkwaffles/A-New-Angle
+   https://github.com/pinkwaffles/clickTime/
 
-2. Navigate to the project and run the following:
+2. Run the following command:
 
   `npm install`
 
