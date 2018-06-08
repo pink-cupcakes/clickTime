@@ -5,6 +5,21 @@ const fs      = require('fs');
 const app = express();
 
 app.get('/', (req, res) => {
+
+  /*Error handle if object key does not exist for standard input: UserID, JobID, TaskID*/
+  const processValue = (obj, key, callback, last) => {
+    let value = obj[key];
+    if (!value) {
+      return last ? '\n' : ' | ';
+    } else if (last) {
+      return callback(value).toString().concat('\n');
+    } else if (callback) {
+      return callback(value).toString().concat(' | ');
+    } else {
+      return value.toString().concat(' | ');
+    }
+  };
+
   /*Date: Date format in data needs to reflect YYMMDD format. Per client request*/
   const processDate = (str) => {
     let date = new Date(str);
@@ -14,32 +29,18 @@ app.get('/', (req, res) => {
     return processedDate;
   };
 
+  /*Hours and Billing rate: Fix two decimal places. Per client request*/
+  const processNumber = (num) => {
+    return num.toFixed(2);
+  };
+  
   /*Comments: Replace any delimiters in data (pipe delimiter only occurs in comments). Per client request
     
   This additional step is necessary as the client cannot process quotations in data. Standard practice
   is to parse by quotations and delimiter, and treat values inside quote as data.*/
   const processComment = (str) => {
-    /*Assumption: client can parse escaped pipe-delimiter, however, can always replace '\\|' with '-' or similar*/
+    /*Assumption: client can parse escaped pipe-delimiter, however, can always replace '\\|' with '-' or another character*/
     return str.replace(/\|/g, '\\|');
-  };
-
-  /*Hours and Billing rate: Fix two decimal places. Per client request*/
-  const processNumber = (num) => {
-    return num.toFixed(2);
-  };
-
-  /*Error handle if object key does not exist for standard input: UserID, JobID, TaskID*/
-  const processValue = (obj, key, callback, last) => {
-    let value = obj[key];
-    if (!value) {
-      return last ? '' : ' | ';
-    } else if (last) {
-      return value ? callback(value) : '';
-    } else if (callback) {
-      return value ? callback(value).toString().concat(' | ') : ' | ';
-    } else {
-      return value ? value.toString().concat(' | ') : ' | ';
-    }
   };
 
   /*This function will process the object per client requests/restrictions*/
@@ -75,7 +76,7 @@ app.get('/', (req, res) => {
 
       availableContractsArr.forEach((contract) => {
         let processedObj = processObj(contract);
-        file.write(processedObj + '\n');
+        file.write(processedObj);
       });
       file.end();
     })
