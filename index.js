@@ -12,7 +12,7 @@ app.get('/', (req, res) => {
     if (!value) {
       return last ? '\n' : ' | ';
     } else if (last) {
-      return callback(value).toString().concat('\n');
+      return callback ? callback(value).toString().concat('\n') : value.toString().concat(' | ');
     } else if (callback) {
       return callback(value).toString().concat(' | ');
     } else {
