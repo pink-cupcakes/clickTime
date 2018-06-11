@@ -4,7 +4,7 @@ const processValue = (obj, key, callback, last) => {
   if (!value && value !== 0) {
     return last ? '\n' : ' | ';
   } else if (last) {
-    return callback ? callback(value).toString().concat('\n') : value.toString().concat(' | ');
+    return callback ? callback(value).toString().concat('\n') : value.toString().concat('\n');
   } else if (callback) {
     return callback(value).toString().concat(' | ');
   } else {

@@ -17,7 +17,7 @@ app.get('/', (req, res) => {
       const file = fs.createWriteStream(filePath);
       file.on('error', (err) => { throw err; });
 
-      availableContractsArr.forEach((contract, index) => {
+      availableContractsArr.forEach((contract) => {
         let processedObj = processObj(contract);
         file.write(processedObj);
       });
